@@ -11,13 +11,6 @@
 - Можливість видалення записів у щоденнику
 - Адаптивний сучасний інтерфейс
 
-## Скріншоти
-
-![Welcome](screenshots/welcome.png)
-![Home](screenshots/home.png)
-![Profile](screenshots/profile.png)
-![Journal](screenshots/journal.png)
-
 ## Встановлення та запуск
 
 1. **Клонувати репозиторій:**
