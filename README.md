@@ -46,6 +46,7 @@
 
 ## Структура проєкту
 
+ ```
 haircare_project/
 ├── haircare_app/
 │ ├── models.py
@@ -64,7 +65,7 @@ haircare_project/
 ├── db.sqlite3
 ├── manage.py
 └── requirements.txt
-
+```
 
 ## Плани на розвиток
 
