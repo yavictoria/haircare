@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0">Профіль</h3>
+        </div>
+        <div class="card-body">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100">Зберегти профіль</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Загальний стиль картки */
+  .card {
+    border: none;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+
+  /* Заголовок картки */
+  .card-header {
+    background-color: #d7c9b6;
+    color: #5a4a3b;
+    font-weight: 600;
+    font-size: 1.3rem;
+    padding: 1rem 1.5rem;
+  }
+
+  /* Тіло картки */
+  .card-body {
+    background-color: #fff;
+    padding: 1.5rem;
+  }
+
+  /* Стиль кнопки */
+  .btn-primary {
+    background-color: #d7c9b6;
+    border-color: #d7c9b6;
+    color: #5a4a3b;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  .btn-primary:hover {
+    background-color: #bba78e;
+    border-color: #bba78e;
+    color: #4a3a2b;
+  }
+  
+
+  /* Поля форми для кращого вигляду */
+  .card-body .form-control {
+    border-radius: 10px;
+    margin-bottom: 1rem;
+  }
+
+  /* Повідомлення успіху */
+  .alert-success {
+    background-color: #e7f1e7;
+    border-color: #d0e6d0;
+    color: #3b5a3b;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card custom-card">
+        <div class="card-header custom-header">
+          <h3 class="text-center mb-0">Зареєструватися</h3>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+              <div class="mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                  <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {{ field.errors }}
+              </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary w-100">Зареєструватися</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* картка */
+  .custom-card {
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border: none;
+    background: #fff;
+  }
+  /* шапка */
+  .custom-header {
+    background-color: #d7c9b6;
+    color: #5a4a3b;
+    padding: 1rem 1.5rem;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom: none;
+  }
+  /* тіло */
+  .card-body {
+    padding: 1.75rem;
+  }
+  /* поля */
+  .form-control {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  /* кнопка */
+  .btn-primary {
+    background-color: #d7c9b6;
+    border-color: #d7c9b6;
+    color: #5a4a3b;
+    border-radius: 25px;
+    font-weight: 600;
+    padding: 0.75rem;
+    transition: background-color 0.3s;
+  }
+  .btn-primary:hover {
+    background-color: #bba78e;
+    border-color: #bba78e;
+    color: #4a3a2b;
+  }
+</style>
+{% endblock %}

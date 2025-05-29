@@ -1,0 +1,99 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ласкаво просимо!</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        html, body {
+            margin: 0; padding: 0; height: 100%;
+        }
+        .welcome-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: url("{% static 'welcome.jpg' %}") center/cover no-repeat fixed;
+            display: flex;
+            align-items: center;
+        }
+        /* темний градієнт зліва */
+        .welcome-section::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 70%;
+            background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0));
+            z-index: 1;
+        }
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+            color: #fff;
+            max-width: 500px;
+            margin-left: 10%;  /* зсунули правіше */
+        }
+        .welcome-content h1 {
+            font-size: 4rem;  /* збільшили заголовок */
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .welcome-content p.lead {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        .btn-welcome {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            padding: 0.8rem 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.15rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-align: center;
+            text-decoration: none;
+        }
+        .btn-register {
+            background-color: #fff8f0;
+            color: #5a4a3b;
+            border: none;
+        }
+        .btn-login {
+            background-color: transparent;
+            color: #fff8f0;
+            border: 2px solid #fff8f0;
+        }
+        .btn-register:hover {
+            background-color: #f0e8df;
+            color: #4a3a2b;
+        }
+        .btn-login:hover {
+            background-color: rgba(255,248,240,0.2);
+        }
+        .text-footer {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        .text-footer a {
+            color: #fff8f0;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-section">
+        <div class="welcome-content">
+            <h1>Ласкаво просимо до<br>Haircare App!</h1>
+            <p class="lead">Будь ласка, увійдіть або зареєструйтеся, щоб продовжити.</p>
+            <a href="{% url 'register' %}" class="btn-welcome btn-register">Зареєструватися</a>
+            <a href="{% url 'login' %}" class="btn-welcome btn-login">Увійти</a>
+            <p class="text-footer">Вже зареєстровані? <a href="{% url 'login' %}">Просто увійдіть</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

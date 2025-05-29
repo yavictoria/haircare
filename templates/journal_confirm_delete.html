@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Видалити запис</h2>
+    <p>Ви впевнені, що хочете видалити цей запис?</p>
+    <p><strong>{{ entry.get_entry_type_display }} — {{ entry.date }}</strong></p>
+    <p>{{ entry.notes }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Видалити</button>
+        <a href="{% url 'journal_list' %}" class="btn btn-secondary">Скасувати</a>
+    </form>
+</div>
+{% endblock %}

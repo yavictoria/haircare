@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card" style="border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border: none;">
+                <div class="card-header" style="background-color: #d7c9b6; color: #5a4a3b; font-weight: 600; font-size: 1.3rem; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom: none;">
+                    <h3 class="card-title">Щоденник догляду за волоссям</h3>
+                </div>
+                <div class="card-body" style="color: #5a4a3b;">
+                    <a href="{% url 'journal_add' %}" class="btn btn-primary mb-3" style="background-color: #d7c9b6; border-color: #d7c9b6; color: #5a4a3b;">
+                        Додати запис
+                    </a>
+
+                    {% if entries %}
+                        <ul class="list-group">
+                            {% for entry in entries %}
+                                <li class="list-group-item" style="border-radius: 10px; margin-bottom: 10px;">
+                                    <strong>{{ entry.get_entry_type_display }} — {{ entry.date }}</strong><br>
+                                    {{ entry.notes|linebreaks }}
+                                    {% if entry.photo %}
+                                        <div class="mt-2">
+                                            <img src="{{ entry.photo.url }}" alt="Фото запису" style="max-width: 200px; border-radius: 10px;">
+                                        </div>
+                                    {% endif %}
+                                    <a href="{% url 'journal_delete' entry.pk %}" class="btn btn-sm mt-2" style="background-color: #d7c9b6; color: #5a4a3b;">
+                                        Видалити
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Записів ще немає.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
