@@ -2,84 +2,92 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="mb-0">Профіль</h3>
-        </div>
-        <div class="card-body">
-          {% if messages %}
-            {% for message in messages %}
-              <div class="alert alert-success">{{ message }}</div>
-            {% endfor %}
-          {% endif %}
-          <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary w-100">Зберегти профіль</button>
-          </form>
-        </div>
+<div class="profile-page">
+  <div class="glass-card">
+    <h1 class="page-title">Профіль</h1>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert-elegant">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" class="profile-form">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label" for="id_nickname">{{ form.nickname.label }}</label>
+        <input type="text" name="nickname" id="id_nickname" class="form-control-custom" value="{{ form.nickname.value|default:'' }}" placeholder="Ваше ім'я або нікнейм" maxlength="50" />
+        {% if form.nickname.errors %}
+          <div class="form-error">{{ form.nickname.errors.0 }}</div>
+        {% endif %}
       </div>
-    </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_hair_type">{{ form.hair_type.label }}</label>
+        <select name="hair_type" id="id_hair_type" class="form-control-custom {% if form.hair_type.errors %}is-invalid{% endif %}">
+          {% for value, label in form.fields.hair_type.choices %}
+            <option value="{{ value }}" {% if form.hair_type.value == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.hair_type.errors %}
+          <div class="form-error">{{ form.hair_type.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_hair_length">{{ form.hair_length.label }}</label>
+        <select name="hair_length" id="id_hair_length" class="form-control-custom {% if form.hair_length.errors %}is-invalid{% endif %}">
+          {% for value, label in form.fields.hair_length.choices %}
+            <option value="{{ value }}" {% if form.hair_length.value == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.hair_length.errors %}
+          <div class="form-error">{{ form.hair_length.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_porosity">{{ form.porosity.label }}</label>
+        <select name="porosity" id="id_porosity" class="form-control-custom {% if form.porosity.errors %}is-invalid{% endif %}">
+          {% for value, label in form.fields.porosity.choices %}
+            <option value="{{ value }}" {% if form.porosity.value == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.porosity.errors %}
+          <div class="form-error">{{ form.porosity.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_brittleness">{{ form.brittleness.label }}</label>
+        <select name="brittleness" id="id_brittleness" class="form-control-custom {% if form.brittleness.errors %}is-invalid{% endif %}">
+          {% for value, label in form.fields.brittleness.choices %}
+            <option value="{{ value }}" {% if form.brittleness.value == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.brittleness.errors %}
+          <div class="form-error">{{ form.brittleness.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-wrap">
+          <input type="checkbox" name="dyed" id="id_dyed" {% if form.dyed.value %}checked{% endif %} />
+          <span class="checkbox-custom">
+            <span class="checkbox-check">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+          </span>
+          <span class="checkbox-label">{{ form.dyed.label }}</span>
+        </label>
+        {% if form.dyed.errors %}
+          <div class="form-error">{{ form.dyed.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn-cta">Зберегти профіль</button>
+    </form>
   </div>
 </div>
-
-<style>
-  /* Загальний стиль картки */
-  .card {
-    border: none;
-    border-radius: 30px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    overflow: hidden;
-  }
-
-  /* Заголовок картки */
-  .card-header {
-    background-color: #d7c9b6;
-    color: #5a4a3b;
-    font-weight: 600;
-    font-size: 1.3rem;
-    padding: 1rem 1.5rem;
-  }
-
-  /* Тіло картки */
-  .card-body {
-    background-color: #fff;
-    padding: 1.5rem;
-  }
-
-  /* Стиль кнопки */
-  .btn-primary {
-    background-color: #d7c9b6;
-    border-color: #d7c9b6;
-    color: #5a4a3b;
-    border-radius: 25px;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-  }
-  .btn-primary:hover {
-    background-color: #bba78e;
-    border-color: #bba78e;
-    color: #4a3a2b;
-  }
-  
-
-  /* Поля форми для кращого вигляду */
-  .card-body .form-control {
-    border-radius: 10px;
-    margin-bottom: 1rem;
-  }
-
-  /* Повідомлення успіху */
-  .alert-success {
-    background-color: #e7f1e7;
-    border-color: #d0e6d0;
-    color: #3b5a3b;
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-  }
-</style>
 {% endblock %}

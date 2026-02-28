@@ -101,9 +101,22 @@ def home(request):
         elif hair_profile.hair_type == "straight":
             recommendations.append("Використовуйте сироватки для блиску волосся.")
 
+    # Fallback: generic daily tips when no profile or no recommendations
+    if not recommendations:
+        recommendations = [
+            "Мийте волосся теплою, а не гарячою водою, щоб зберегти натуральні олії.",
+            "Наносите маску на волосся від середини до кінчиків, уникаючи коренів.",
+            "Робіть масаж шкіри голови кілька хвилин перед миттям для кращого кровообігу.",
+            "Захищайте волосся від сонця головним убором або спреєм з SPF.",
+            "Оберіть шампунь без сульфатів для м’якого щоденного догляду.",
+        ]
+
+    display_name = hair_profile.nickname if hair_profile else request.user.username
+
     return render(request, 'home.html', {
         'hair_profile': hair_profile,
         'recommendations': recommendations,
+        'display_name': display_name,
     })
 
 

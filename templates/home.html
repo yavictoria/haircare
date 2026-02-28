@@ -1,128 +1,99 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block body_class %}landing-page{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Ласкаво просимо, {{ request.user.username }}!</h3>
-                </div>
-                <div class="card-body">
-                    {% if hair_profile %}
-                        <p><strong>Нікнейм:</strong> {{ hair_profile.nickname }}</p>
-                        <p><strong>Тип волосся:</strong> {{ hair_profile.hair_type }}</p>
-                        <p><strong>Довжина волосся:</strong> {{ hair_profile.hair_length }}</p>
-                        <p><strong>Пористість:</strong> {{ hair_profile.porosity }}</p>
-                        <p><strong>Ламкість:</strong> {{ hair_profile.brittleness }}</p>
-                        <p><strong>Фарбоване:</strong> {{ hair_profile.dyed|yesno:"Так,Ні" }}</p>
-
-                        <hr>
-                        <h4>Рекомендації для вашого волосся:</h4>
-
-                        <!-- Карусель для рекомендацій -->
-                        <div id="recommendationsCarousel" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                                {% for recommendation in recommendations %}
-                                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                        <div class="text-center">
-                                            <p>{{ recommendation }}</p>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            <!-- Кнопки для прокрутки -->
-                            <button class="carousel-control-prev" type="button" data-bs-target="#recommendationsCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Попередня</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#recommendationsCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Наступна</span>
-                            </button>
-                        </div>
-
-                        <a href="{% url 'journal_list' %}" class="btn btn-primary mt-4">Перейти до щоденника</a>
-
-                    {% else %}
-                        <p>Профіль волосся не знайдено. <a href="/profile/" class="btn btn-primary">Заповнити профіль</a></p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+<div class="hero" id="hero-area">
+  <!-- Mouse-reactive parallax: soap bubbles (radial gradient) -->
+  <div class="parallax-layer" id="parallax-bubbles" aria-hidden="true">
+    <div class="parallax-bubble" data-speed="0.03" style="width: 48px; height: 48px; top: 15%; left: 12%;"></div>
+    <div class="parallax-bubble" data-speed="0.05" style="width: 32px; height: 32px; top: 25%; right: 18%;"></div>
+    <div class="parallax-bubble" data-speed="0.04" style="width: 56px; height: 56px; bottom: 22%; left: 8%;"></div>
+    <div class="parallax-bubble" data-speed="0.06" style="width: 28px; height: 28px; bottom: 35%; right: 12%;"></div>
+    <div class="parallax-bubble" data-speed="0.035" style="width: 40px; height: 40px; top: 50%; left: 6%;"></div>
+    <div class="parallax-bubble" data-speed="0.045" style="width: 36px; height: 36px; top: 60%; right: 10%;"></div>
+    <div class="parallax-bubble" data-speed="0.04" style="width: 44px; height: 44px; top: 18%; left: 55%;"></div>
+    <div class="parallax-bubble" data-speed="0.05" style="width: 30px; height: 30px; bottom: 25%; left: 25%;"></div>
+  </div>
+  <!-- White bows -->
+  <div class="parallax-layer" id="parallax-bows" aria-hidden="true">
+    <div class="parallax-bow" data-speed="0.04" data-rotate="15" style="width: 36px; height: 24px; top: 20%; right: 22%;">
+      <svg viewBox="0 0 64 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 20c0-8 8-16 24-16 0 8-8 16-24 16 16 0 24-8 24-16-16 0-24 8-24 16z" opacity="0.9"/></svg>
     </div>
+    <div class="parallax-bow" data-speed="0.055" data-rotate="-20" style="width: 28px; height: 18px; bottom: 30%; left: 15%;">
+      <svg viewBox="0 0 64 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 20c0-8 8-16 24-16 0 8-8 16-24 16 16 0 24-8 24-16-16 0-24 8-24 16z" opacity="0.9"/></svg>
+    </div>
+    <div class="parallax-bow" data-speed="0.035" data-rotate="10" style="width: 32px; height: 20px; top: 65%; right: 15%;">
+      <svg viewBox="0 0 64 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 20c0-8 8-16 24-16 0 8-8 16-24 16 16 0 24-8 24-16-16 0-24 8-24 16z" opacity="0.9"/></svg>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">Привіт, {{ display_name }} — сьогодні подбаймо про твоє волосся.</h1>
+    <p class="hero-subtitle">Ось твої щоденні поради та швидкий доступ до догляду.</p>
+  </div>
 </div>
 
-<style>
-    body {
-        background-color: #f9f6f1;
-        color: #4a4a4a;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+<section class="landing-section tips-section" id="daily-tips">
+  <h2 class="section-title">Щоденні поради</h2>
+  <div class="tips-carousel">
+    <div class="swiper tips-swiper">
+      <div class="swiper-wrapper">
+        {% for tip in recommendations %}
+          <div class="swiper-slide">
+            <div class="tip-card">
+              <p>{{ tip }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </div>
+</section>
 
-    .card {
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        border-radius: 20px;
-        border: none;
-        overflow: hidden; /* Щоб вміст не виступав за скруглені краї */
-    }
+<section class="landing-section features-section">
+  <h2 class="section-title">Можливості</h2>
+  <div class="features-grid">
+    <a href="{% url 'journal_list' %}" class="feature-card">
+      <svg class="feature-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8"/><path d="M8 11h8"/>
+      </svg>
+      <h3 class="feature-card-title">Щоденник</h3>
+      <p class="feature-card-desc">Записуй миття, маски та процедури — веди історію догляду за волоссям.</p>
+    </a>
+    <a href="{% url 'profile' %}" class="feature-card">
+      <svg class="feature-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+      <h3 class="feature-card-title">Профіль</h3>
+      <p class="feature-card-desc">Тип волосся, пористість, довжина — оновлюй дані для персональних порад.</p>
+    </a>
+  </div>
+</section>
 
-    .card-header {
-        background-color: #d7c9b6;
-        color: #5a4a3b;
-        font-weight: 600;
-        font-size: 1.3rem;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        border: none;
-    }
-
-    .carousel-inner {
-        background-color: #fff8f0;
-        border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(80, 46, 46, 0.39);
-        padding: 20px;
-        font-size: 1.1rem;
-        color: #5a4a3b;
-    }
-
-    .carousel-control-prev-icon,
-    .carousel-control-next-icon {
-        background-color: #d7c9b6;
-        border-radius: 50%;
-        padding: 12px;
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
-    }
-
-    .btn-primary {
-        background-color: #d7c9b6;
-        border-color: #d7c9b6;
-        color: #5a4a3b;
-        border-radius: 25px;
-        font-weight: 600;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        background-color: #bba78e;
-        border-color: #bba78e;
-        color: #4a3a2b;
-    }
-
-    h4 {
-        font-weight: 700;
-        margin-top: 30px;
-        color: #5a4a3b;
-    }
-    
-    .carousel-inner {
-        background-color: #fff8f0;
-        border-radius: 20px; /* скруглені кути */
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        padding: 20px;
-        font-size: 1.1rem;
-        color: #5a4a3b;
-}
-</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="{% static 'js/home.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.tips-swiper', {
+      slidesPerView: 'auto',
+      centeredSlides: true,
+      spaceBetween: 24,
+      grabCursor: true,
+      loop: true,
+      pagination: { el: '.tips-swiper .swiper-pagination', clickable: true },
+      navigation: {
+        nextEl: '.tips-swiper .swiper-button-next',
+        prevEl: '.tips-swiper .swiper-button-prev',
+      },
+      autoplay: { delay: 5000, disableOnInteraction: false },
+      speed: 400,
+    });
+  });
+</script>
 {% endblock %}
