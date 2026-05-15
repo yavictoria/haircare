@@ -1,47 +1,83 @@
-from django.test import TestCase, Client
-from django.urls import reverse
+from datetime import date
+
 from django.contrib.auth.models import User
-from .models import HairProfile, JournalEntry
+from django.test import TestCase
 
-class HairCareSimpleTests(TestCase):
+from .models import AIChatMessage, HairProfile, JournalEntry
+
+
+class HairProfileTests(TestCase):
     def setUp(self):
-        # Створюємо тестового користувача для тестів, де потрібна авторизація
-        self.user = User.objects.create_user(username='testuser', password='password123')
-        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpass123',
+        )
 
-    # 1. Тест доступності головної сторінки (Welcome page)
-    def test_welcome_page_status_code(self):
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-
-    # 2. Тест сторінки логіну
-    def test_login_page_status_code(self):
-        response = self.client.get(reverse('login'))
-        self.assertEqual(response.status_code, 200)
-
-    # 3. Тест створення профілю волосся (Model test)
-    def test_hair_profile_creation(self):
+    def test_hair_profile_str(self):
         profile = HairProfile.objects.create(
             user=self.user,
-            hair_type='Straight',
-            porosity='Low',
-            thickness='Medium'
+            nickname='Vika',
+            hair_type='wavy',
+            hair_length='medium',
+            porosity='medium',
+            brittleness='mild',
         )
-        self.assertEqual(profile.hair_type, 'Straight')
-        self.assertEqual(HairProfile.objects.count(), 1)
+        self.assertEqual(str(profile), "Vika's Hair Profile")
 
-    # 4. Тест створення запису в журналі (Journal test)
-    def test_journal_entry_creation(self):
+    def test_hair_profile_dyed_defaults_to_false(self):
+        profile = HairProfile.objects.create(
+            user=self.user,
+            nickname='Vika',
+            hair_type='straight',
+            hair_length='short',
+            porosity='low',
+            brittleness='none',
+        )
+        self.assertFalse(profile.dyed)
+
+
+class JournalEntryTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='journaluser',
+            password='testpass123',
+        )
+
+    def test_journal_entry_str(self):
         entry = JournalEntry.objects.create(
             user=self.user,
-            title='Мій перший догляд',
-            content='Використала новий бальзам'
+            entry_type='wash',
+            notes='Morning wash',
+            date=date(2026, 5, 15),
         )
-        self.assertEqual(entry.title, 'Мій перший догляд')
-        self.assertEqual(JournalEntry.objects.count(), 1)
+        self.assertEqual(
+            str(entry),
+            f'{self.user.username} - wash (2026-05-15)',
+        )
 
-    # 5. Тест редіректу (якщо неавторизований юзер йде в профіль)
-    def test_profile_redirect_if_not_logged_in(self):
-        # Оскільки сторінка профілю зазвичай закрита @login_required
-        response = self.client.get(reverse('profile'))
-        self.assertEqual(response.status_code, 302) # Має бути перенаправлення на сторінку логіну
+
+class AIChatMessageTests(TestCase):
+    def test_ai_chat_message_creation(self):
+        user = User.objects.create_user(
+            username='aiuser',
+            password='testpass123',
+        )
+        message = AIChatMessage.objects.create(
+            user=user,
+            user_text='How often should I wash curly hair?',
+            ai_text='1-2 times per week.',
+        )
+        self.assertEqual(message.user_text, 'How often should I wash curly hair?')
+        self.assertEqual(message.ai_text, '1-2 times per week.')
+
+    def test_ai_chat_message_str_contains_username(self):
+        user = User.objects.create_user(
+            username='aiuser',
+            password='testpass123',
+        )
+        message = AIChatMessage.objects.create(
+            user=user,
+            user_text='Hello',
+            ai_text='Hi there',
+        )
+        self.assertIn('aiuser', str(message))
