@@ -5,29 +5,7 @@
 
 {% block content %}
 <div class="hero" id="hero-area">
-  <!-- Mouse-reactive parallax: soap bubbles (radial gradient) -->
-  <div class="parallax-layer" id="parallax-bubbles" aria-hidden="true">
-    <div class="parallax-bubble" data-speed="0.03" style="width: 48px; height: 48px; top: 15%; left: 12%;"></div>
-    <div class="parallax-bubble" data-speed="0.05" style="width: 32px; height: 32px; top: 25%; right: 18%;"></div>
-    <div class="parallax-bubble" data-speed="0.04" style="width: 56px; height: 56px; bottom: 22%; left: 8%;"></div>
-    <div class="parallax-bubble" data-speed="0.06" style="width: 28px; height: 28px; bottom: 35%; right: 12%;"></div>
-    <div class="parallax-bubble" data-speed="0.035" style="width: 40px; height: 40px; top: 50%; left: 6%;"></div>
-    <div class="parallax-bubble" data-speed="0.045" style="width: 36px; height: 36px; top: 60%; right: 10%;"></div>
-    <div class="parallax-bubble" data-speed="0.04" style="width: 44px; height: 44px; top: 18%; left: 55%;"></div>
-    <div class="parallax-bubble" data-speed="0.05" style="width: 30px; height: 30px; bottom: 25%; left: 25%;"></div>
-  </div>
-  <!-- White bows -->
-  <div class="parallax-layer" id="parallax-bows" aria-hidden="true">
-    <div class="parallax-bow" data-speed="0.04" data-rotate="15" style="width: 36px; height: 24px; top: 20%; right: 22%;">
-      <svg viewBox="0 0 64 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 20c0-8 8-16 24-16 0 8-8 16-24 16 16 0 24-8 24-16-16 0-24 8-24 16z" opacity="0.9"/></svg>
-    </div>
-    <div class="parallax-bow" data-speed="0.055" data-rotate="-20" style="width: 28px; height: 18px; bottom: 30%; left: 15%;">
-      <svg viewBox="0 0 64 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 20c0-8 8-16 24-16 0 8-8 16-24 16 16 0 24-8 24-16-16 0-24 8-24 16z" opacity="0.9"/></svg>
-    </div>
-    <div class="parallax-bow" data-speed="0.035" data-rotate="10" style="width: 32px; height: 20px; top: 65%; right: 15%;">
-      <svg viewBox="0 0 64 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 20c0-8 8-16 24-16 0 8-8 16-24 16 16 0 24-8 24-16-16 0-24 8-24 16z" opacity="0.9"/></svg>
-    </div>
-  </div>
+  {% include 'partials/parallax_bubbles.html' %}
 
   <div class="hero-content">
     <h1 class="hero-title">Привіт, {{ display_name }} — сьогодні подбаймо про твоє волосся.</h1>

@@ -1,5 +1,8 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Шлях до кореневої директорії проєкту
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,8 +24,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'haircare_app',  # Ваш додаток для догляду за волоссям
-
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google', # Провайдер Google
+    
+    
 ]
+
+# Обов'язково вказуємо ID сайту (потрібно для allauth)
+SITE_ID = 1
+
 
 # Мідлвери
 MIDDLEWARE = [
@@ -33,6 +46,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 # Кореневий URL конфігурації
@@ -114,3 +128,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend', # Стандартний вхід по логіну/паролю
+    'allauth.account.auth_backends.AuthenticationBackend', # Вхід через Google
+]
+
+# Куди перенаправляти після успішного входу
+LOGIN_REDIRECT_URL = 'profile'
+LOGOUT_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# Налаштування allauth
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']

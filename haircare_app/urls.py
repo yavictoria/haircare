@@ -1,6 +1,7 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.contrib.auth import views as auth_views
+
 
 
 urlpatterns = [
@@ -17,6 +18,8 @@ urlpatterns = [
     path('journal/delete/<int:pk>/', views.journal_delete, name='journal_delete'),
     path('welcome/', views.welcome, name='welcome'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('assistant/', views.ai_assistant, name='ai_assistant'),
+    path('accounts/', include('allauth.urls')),
 
 
     # Додатковий шлях для входу

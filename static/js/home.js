@@ -41,7 +41,7 @@
     var offsetY = (currentY - centerY) * 2;
 
     var elements = getElements();
-    var maxMove = 28;
+    var maxMove = 36;
 
     for (var i = 0; i < elements.length; i++) {
       var el = elements[i];

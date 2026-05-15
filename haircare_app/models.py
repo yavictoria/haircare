@@ -54,3 +54,12 @@ class JournalEntry(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.entry_type} ({self.date})"
+
+class AIChatMessage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ai_chats')
+    user_text = models.TextField()
+    ai_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)  # Автоматично зберігає дату і час
+
+    def __str__(self):
+        return f"Чат {self.user.username} ({self.created_at.strftime('%Y-%m-%d')})"

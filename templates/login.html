@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load socialaccount %}
 
 {% block content %}
 <div class="auth-page">
@@ -33,6 +34,8 @@
       <button type="submit" class="btn-cta">Увійти</button>
     </form>
 
+
+    
     <p class="auth-footer">
       Ще немає облікового запису? <a href="{% url 'register' %}">Зареєструватися</a>
     </p>

@@ -23,9 +23,11 @@
   --glass-blur: 24px;
   --glass-saturate: 180%;
   --border-soft: rgba(196, 167, 125, 0.2);
-  --shadow-soft: 0 8px 32px rgba(74, 66, 56, 0.08);
-  --shadow-elevation: 0 16px 48px rgba(74, 66, 56, 0.1);
-  --shadow-card: 0 10px 40px rgba(60, 50, 40, 0.06);
+  /* Warm, prominent shadows (buttons, cards, header) */
+  --shadow-soft: 0 10px 36px rgba(130, 92, 62, 0.16);
+  --shadow-elevation: 0 20px 52px rgba(110, 78, 52, 0.22);
+  --shadow-card: 0 14px 44px rgba(120, 88, 58, 0.14);
+  --shadow-header: 0 6px 28px rgba(120, 85, 58, 0.14);
   --radius-sm: 12px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -79,6 +81,7 @@ body.has-bg-image {
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border-bottom: 1px solid var(--glass-border);
   padding: 0.75rem 0;
+  box-shadow: var(--shadow-header);
 }
 
 .app-header .container {
@@ -471,15 +474,24 @@ body.landing-page {
 .parallax-bubble {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(255, 252, 248, 0.5));
-  box-shadow: inset -2px -3px 8px rgba(255, 255, 255, 0.6), inset 2px 2px 6px rgba(0, 0, 0, 0.04);
+  background: radial-gradient(
+    circle at 28% 26%,
+    rgba(255, 255, 255, 0.98),
+    rgba(255, 248, 238, 0.75) 42%,
+    rgba(245, 228, 210, 0.55) 100%
+  );
+  box-shadow:
+    inset -4px -6px 14px rgba(255, 255, 255, 0.85),
+    inset 4px 4px 10px rgba(160, 110, 75, 0.12),
+    0 10px 32px rgba(160, 105, 70, 0.28),
+    0 4px 14px rgba(200, 150, 110, 0.2);
   will-change: transform;
 }
 
 .parallax-bow {
   position: absolute;
-  color: rgba(255, 255, 255, 0.85);
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.06));
+  color: rgba(255, 252, 248, 0.95);
+  filter: drop-shadow(0 6px 18px rgba(150, 100, 65, 0.35)) drop-shadow(0 2px 6px rgba(200, 150, 100, 0.25));
   will-change: transform;
 }
 
@@ -1010,6 +1022,8 @@ input[type="file"].form-control-custom::file-selector-button:hover {
   box-shadow: var(--shadow-soft);
 }
 
+
+
 .auth-title {
   font-size: 1.5rem;
   font-weight: 600;
@@ -1099,4 +1113,408 @@ input[type="file"].form-control-custom::file-selector-button:hover {
   background: rgba(184, 92, 92, 0.08);
   border-radius: var(--radius-sm);
   border-left: 3px solid #b85c5c;
+}
+
+/* =========================================
+   СТИЛІ ДЛЯ AI ПОМІЧНИКА (GRID-МАКЕТ + ЗМЕНШЕНИЙ МАСШТАБ)
+   ========================================= */
+
+/* 1. Дозволяємо контейнеру розтягнутися ширше, ніж звичайні сторінки */
+.app-main:has(.ai-layout) {
+  max-width: 1400px;
+  padding-top: 1rem;
+}
+
+/* 2. ГОЛОВНИЙ МАКЕТ (Сайдбар зліва + Чат справа) */
+.ai-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr; /* Трохи звузили сайдбар */
+  gap: 20px; /* Зменшили відстань між колонками */
+  width: 100%;
+  height: calc(100vh - 120px);
+}
+
+/* 3. САЙДБАР (Історія) */
+.ai-sidebar {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 15px; /* Зменшили внутрішні відступи */
+  overflow-y: auto;
+  scrollbar-width: none;
+  height: 100%;
+}
+.ai-sidebar::-webkit-scrollbar { display: none; }
+
+.sidebar-title { font-size: 1rem; color: var(--text-primary); margin: 0 0 12px 0; font-weight: 600; text-align: center; }
+.sidebar-menu { display: flex; flex-direction: column; gap: 6px; }
+.sidebar-link { padding: 10px 12px; background: rgba(255, 255, 255, 0.5); border-radius: 10px; color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: all var(--transition); display: flex; align-items: center; gap: 8px; border: 1px solid transparent; }
+.sidebar-link i { color: var(--terracotta-soft); font-size: 0.9rem; }
+.sidebar-link:hover { background: var(--cream); color: var(--text-primary); border-color: var(--border-soft); transform: translateX(3px); }
+.sidebar-empty { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 20px; }
+
+/* 4. КОНТЕЙНЕР ЧАТУ */
+.ai-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden; 
+  height: 100%;
+}
+
+/* 5. ВІКНО З ПОВІДОМЛЕННЯМИ */
+.ai-chat-window {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px 15px 110px 15px; /* Зменшили відступи */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Повідомлення стали ближче одне до одного */
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(188, 170, 164, 0.5) transparent;
+}
+
+/* Бульбашки */
+.ai-row { display: flex; gap: 10px; width: 100%; align-items: flex-end; }
+.ai-row.user-message { flex-direction: row-reverse; }
+
+.ai-text {
+  max-width: 80%;
+  padding: 10px 15px; /* Зробили бульбашки компактнішими */
+  border-radius: 16px; 
+  font-size: 0.95rem; /* Зменшили шрифт */
+  line-height: 1.45;
+  box-shadow: var(--shadow-soft);
+}
+.ai-text p { margin: 0; }
+.ai-message .ai-text { background: var(--text-primary); color: var(--cream); border-bottom-left-radius: 4px; }
+.user-message .ai-text { background: rgba(255, 255, 255, 0.95); color: var(--text-primary); border: 1px solid var(--border-soft); border-bottom-right-radius: 4px; }
+
+/* Аватарки */
+.ai-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.85rem; box-shadow: var(--shadow-soft); }
+.ai-icon { background: var(--terracotta-deep); color: var(--cream); }
+.user-icon { background: var(--sand-deep); color: var(--text-primary); }
+
+.chat-date-divider { text-align: center; margin: 8px 0; width: 100%; }
+.chat-date-divider span { background: rgba(255, 255, 255, 0.6); padding: 4px 12px; border-radius: 10px; font-size: 0.75rem; color: var(--text-muted); backdrop-filter: blur(5px); border: 1px solid var(--border-soft); font-weight: 500; }
+
+/* 6. ПЛАВАЮЧА ЗОНА ВВЕДЕННЯ */
+.ai-input-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%; 
+  padding: 15px; /* Зменшили відступ від країв */
+  background: linear-gradient(to top, var(--glass-bg) 60%, transparent);
+  pointer-events: none;
+}
+
+.ai-input-box {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 12px; /* Зробили поле вводу вужчим по висоті */
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-elevation);
+  pointer-events: auto;
+}
+.ai-input-box textarea { flex-grow: 1; border: none; background: transparent; outline: none; resize: none; font-family: inherit; font-size: 0.95rem; color: var(--text-primary); padding: 8px 0; max-height: 120px; }
+.ai-input-box textarea::placeholder { color: var(--text-muted); }
+
+/* Кнопка відправки */
+.ai-send-btn { background: var(--terracotta); color: var(--cream); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s, background 0.2s; margin-bottom: 2px; font-size: 0.9rem; }
+.ai-send-btn:hover { background: var(--terracotta-deep); transform: scale(1.05); }
+.ai-disclaimer { text-align: center; font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; pointer-events: auto; }
+
+/* =========================================
+ ВБИВАЄМО ОБМЕЖЕННЯ GLASS-CARD ДЛЯ ЧАТУ
+ ========================================= */
+.ai-layout .glass-card,
+.ai-wrapper.glass-card,
+.ai-chat-window.glass-card,
+.ai-input-box.glass-card {
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+/* ============================================
+   Welcome landing (public root) — in-app style
+   ============================================ */
+
+body.welcome-landing {
+  background: linear-gradient(165deg, #fdfcfa 0%, #f8f6f2 40%, #f2efe8 100%);
+  background-image: linear-gradient(165deg, #fdfcfa 0%, #f8f6f2 40%, #f2efe8 100%);
+  background-attachment: fixed;
+}
+
+.welcome-landing .app-main {
+  padding: 0;
+  max-width: none;
+}
+
+.welcome-hero {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem 4rem;
+  overflow: hidden;
+}
+
+.welcome-hero-inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 560px;
+}
+
+.welcome-hero-title {
+  font-size: clamp(1.85rem, 5vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+}
+
+.welcome-hero-lead {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0 0 1.75rem;
+}
+
+.welcome-cta-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.welcome-btn-primary {
+  display: block;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--cream);
+  background: var(--terracotta);
+  border: none;
+  border-radius: var(--radius-input);
+  text-align: center;
+  text-decoration: none;
+  box-shadow: var(--shadow-soft);
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.welcome-btn-primary:hover {
+  background: var(--terracotta-deep);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevation);
+}
+
+.welcome-btn-outline {
+  display: block;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--terracotta-deep);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-input);
+  text-align: center;
+  text-decoration: none;
+  box-shadow: var(--shadow-soft);
+  transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.welcome-btn-outline:hover {
+  border-color: var(--terracotta-soft);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-elevation);
+}
+
+.welcome-btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-input);
+  text-decoration: none;
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.welcome-btn-google:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevation);
+}
+
+.welcome-btn-google svg {
+  flex-shrink: 0;
+  color: var(--terracotta-deep);
+}
+
+.welcome-divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+  margin: 0.35rem 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.welcome-divider::before,
+.welcome-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-soft), transparent);
+}
+
+.welcome-divider span {
+  padding: 0 0.75rem;
+}
+
+.welcome-section-block {
+  padding: 3.5rem 1.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.welcome-section-block h2 {
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.welcome-section-block > p.welcome-intro {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto 2rem;
+}
+
+.welcome-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.welcome-feature-tile {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.35rem;
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.welcome-feature-tile:hover {
+  box-shadow: var(--shadow-elevation);
+  transform: translateY(-2px);
+}
+
+.welcome-feature-tile h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.4rem;
+}
+
+.welcome-feature-tile p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.welcome-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.welcome-review-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 1.35rem 1.25rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.welcome-stars {
+  color: #c9a227;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.65rem;
+}
+
+.welcome-review-text {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+  font-style: italic;
+}
+
+.welcome-review-author {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--terracotta-deep);
+  margin: 0;
+}
+
+.welcome-review-context {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0.2rem 0 0;
+}
+
+.welcome-cta-bottom {
+  text-align: center;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.welcome-cta-bottom p {
+  color: var(--text-secondary);
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
 }

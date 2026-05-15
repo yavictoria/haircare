@@ -9,7 +9,13 @@ from .models import HairProfile
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import JournalEntry
 from .forms import JournalEntryForm
+from .models import AIChatMessage
 from django.contrib.auth.decorators import login_required
+import google.generativeai as genai
+from django.conf import settings
+from django.http import JsonResponse
+import PIL.Image
+import os
 
 
 
@@ -208,3 +214,80 @@ def journal_delete(request, pk):
         return redirect('journal_list')
     return render(request, 'journal_confirm_delete.html', {'entry': entry})
 
+@login_required(login_url='login')
+def ai_assistant(request):
+    if request.method == "POST":
+        user_message = request.POST.get('message')
+
+        # 1. Беремо базові дані профілю
+        try:
+            profile = request.user.hairprofile
+            hair_context = f"Тип: {profile.hair_type}, Довжина: {profile.hair_length}, Пористість: {profile.porosity}, Ламкість: {profile.brittleness}, Фарбоване: {'Так' if profile.dyed else 'Ні'}."
+        except Exception as e:
+            hair_context = "Дані профілю не заповнені."
+
+        # 2. АНАЛІЗ ЩОДЕННИКА (Текст + Фото)
+        journal_text = ""
+        images_to_send = []
+        
+        try:
+            # ВИПРАВЛЕНО: Тепер використовуємо правильний related_name з твого models.py
+            recent_entries = request.user.journal_entries.all().order_by('-date')[:5] 
+            
+            if recent_entries.exists():
+                journal_text = "\n\nОсь останні записи зі щоденника догляду користувача (для контексту):\n"
+                for entry in recent_entries:
+                    journal_text += f"- Дата: {entry.date.strftime('%d.%m.%Y')}. Процедура: {entry.get_entry_type_display()}. Нотатки: {entry.notes}\n"
+                    
+                    # Відкриваємо фото, якщо воно є
+                    if entry.photo and hasattr(entry.photo, 'path') and os.path.exists(entry.photo.path):
+                        img = PIL.Image.open(entry.photo.path)
+                        images_to_send.append(img)
+                
+                # Обмежуємо до 3 останніх фотографій, щоб AI відповідав швидко
+                images_to_send = images_to_send[:3]
+        except Exception as e:
+            print(f"🚨 Помилка читання щоденника: {e}")
+
+        # 3. Підключаємось до Gemini
+        genai.configure(api_key=settings.GEMINI_API_KEY)
+
+        system_instruction = f"""
+        Ти — емпатичний, професійний та сучасний AI-експерт з догляду за волоссям. Твоє ім'я — Кера.
+        Характеристики волосся клієнта: {hair_context}.{journal_text}
+        
+        ВАЖЛИВО: Разом із цим повідомленням ти можеш отримати фотографії. Це реальні фото волосся клієнта з його щоденника догляду. 
+        Якщо клієнт питає про свій прогрес, стан волосся на фото або про свої минулі процедури, спирайся на ці фото та записи зі щоденника.
+        Давай чіткі, дієві поради. Спілкуйся виключно українською мовою. Твій тон: дружній, підтримуючий, естетичний.
+        Пиши короткими абзацами. Ніколи не використовуй маркдаун для заголовків (#).
+        """
+
+        model = genai.GenerativeModel(
+            model_name='gemini-2.5-flash',
+            system_instruction=system_instruction
+        )
+
+        try:
+            # 4. Формуємо фінальний запит: Текст користувача + Список фотографій зі щоденника
+            request_content = [user_message] + images_to_send
+            
+            # Відправляємо все разом в AI
+            response = model.generate_content(request_content)
+            ai_reply = response.text
+            
+            from .models import AIChatMessage
+            AIChatMessage.objects.create(
+                user=request.user,
+                user_text=user_message,
+                ai_text=ai_reply
+            )
+
+            return JsonResponse({'reply': ai_reply})
+        except Exception as e:
+            print(f"Помилка Gemini: {e}")
+            return JsonResponse({'reply': 'Ой, щось пішло не так із зв\'язком. Спробуй ще раз трохи пізніше!'}, status=500)
+
+    # ДЛЯ GET ЗАПИТІВ (Вивід історії)
+    from .models import AIChatMessage
+    chat_history = AIChatMessage.objects.filter(user=request.user).order_by('created_at')
+    return render(request, 'assistant.html', {'chat_history': chat_history})

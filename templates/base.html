@@ -14,7 +14,7 @@
 <body class="{% block body_class %}{% endblock %}">
     <header class="app-header">
         <div class="container">
-            <a class="brand" href="{% url 'home' %}">Haircare App</a>
+            <a class="brand" href="{% if request.user.is_authenticated %}{% url 'home' %}{% else %}{% url 'welcome' %}{% endif %}">Haircare App</a>
             <nav>
                 <ul class="nav">
                     {% if request.user.is_authenticated %}
@@ -22,6 +22,15 @@
                             <a href="{% url 'profile' %}">
                                 <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                 Профіль
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'ai_assistant' %}">
+                                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+                                    <path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>
+                                </svg>
+                                Помічник
                             </a>
                         </li>
                         <li>
