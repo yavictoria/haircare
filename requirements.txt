@@ -5,3 +5,5 @@ sqlparse==0.5.3
 tzdata==2025.2
 python-dotenv
 django-allauth==65.4.1
+requests==2.32.3
+google-generativeai==0.8.4
